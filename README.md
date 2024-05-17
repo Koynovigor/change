@@ -12,3 +12,5 @@
 - скачать APK из [релиза](https://github.com/Koynovigor/change/releases)
 - установить
 - наслаждаться (●'◡'●)
+## Стек
+  Kotlin 1.9.0 c Jetpack Compose
