@@ -9,7 +9,6 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -21,7 +20,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.input.KeyboardType
 import com.l3on1kl.change.ui.theme.ChangeTheme
 import com.l3on1kl.change.weatherapi.di.Weather
 import com.l3on1kl.change.weatherapi.di.weatherModule
@@ -55,24 +53,21 @@ class MainActivity : ComponentActivity() {
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally,
                         )  {
-                            var salt by remember {
+                            var city by remember {
                                 mutableStateOf("")
                             }
                             TextField(
-                                value = salt,
+                                value = city,
                                 onValueChange = {value ->
-                                    salt = value
+                                    city = value
                                 },
-                                keyboardOptions = KeyboardOptions(
-                                    keyboardType = KeyboardType.Number
-                                ),
                                 placeholder = {
                                     Text(
-                                        text = "Начальное значение"
+                                        text = "Город"
                                     )
                                 }
                             )
-                            var randNum by remember {
+                            val weatherCurrent = remember {
                                 mutableStateOf("")
                             }
 
@@ -80,20 +75,16 @@ class MainActivity : ComponentActivity() {
 
                             Button(
                                 onClick = {
-                                    if (salt.toIntOrNull() == null || salt.isBlank()){
-                                        salt = "0"
-                                    }
-                                    if (salt == "") salt = "0"
-                                    randNum = weather.weatherAPI(
-                                        salt = salt.toLong()
-                                    ).toString()
+                                    weather.weatherAPI(city, weatherCurrent)
                                 }
                             ) {
-                                Text(text = "Генерация")
+                                Text(text = "Узнать погоду")
                             }
-                            Text(
-                                text = "Сгенерированное число: $randNum"
-                            )
+                            if (city.isNotEmpty()){
+                                Text(
+                                    text = "Сейчас в $city: ${weatherCurrent.value} градусов"
+                                )
+                            }
                         }
                         Button(
                             onClick = {
