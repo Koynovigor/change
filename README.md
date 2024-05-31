@@ -18,5 +18,5 @@
 - наслаждаться (●'◡'●)
 
 ## Стек
-  Kotlin 1.9.0 c Jetpack Compose
-  Okhttp, Volley
+  - Kotlin 1.9.0 c Jetpack Compose
+  - Okhttp, Volley
