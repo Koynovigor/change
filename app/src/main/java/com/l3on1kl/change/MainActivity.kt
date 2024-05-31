@@ -21,27 +21,19 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.l3on1kl.change.ui.theme.ChangeTheme
-import com.l3on1kl.change.weatherapi.di.Weather
-import com.l3on1kl.change.weatherapi.di.weatherModule
-import org.koin.android.ext.android.get
-import org.koin.android.ext.koin.androidContext
-import org.koin.core.context.startKoin
+import com.l3on1kl.network.weatherAPI
+import com.l3on1kl.ping.checkPing
 import java.util.Calendar
-
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        startKoin{
-            androidContext(this@MainActivity)
-            modules(
-                weatherModule  // Загрузка модуля
-            )
-        }
+
 
         setContent {
             ChangeTheme {
                 // A surface container using the 'background' color from the theme
+
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
@@ -52,14 +44,21 @@ class MainActivity : ComponentActivity() {
                     ) {
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally,
-                        )  {
+                        ) {
                             var city by remember {
+                                mutableStateOf("")
+                            }
+                            val weatherCurrent = remember {
+                                mutableStateOf("")
+                            }
+                            val ping = remember {
                                 mutableStateOf("")
                             }
                             TextField(
                                 value = city,
-                                onValueChange = {value ->
+                                onValueChange = { value ->
                                     city = value
+                                    ping.value = ""
                                 },
                                 placeholder = {
                                     Text(
@@ -67,22 +66,18 @@ class MainActivity : ComponentActivity() {
                                     )
                                 }
                             )
-                            val weatherCurrent = remember {
-                                mutableStateOf("")
-                            }
-
-                            val weather: Weather = get() // Использование модуля
-
                             Button(
                                 onClick = {
-                                    weather.weatherAPI(city, weatherCurrent)
+                                    weatherAPI(city, weatherCurrent, this@MainActivity)
+                                    checkPing(this@MainActivity, ping)
                                 }
                             ) {
                                 Text(text = "Узнать погоду")
                             }
-                            if (city.isNotEmpty()){
+                            if (ping.value.isNotEmpty()) {
                                 Text(
-                                    text = "Сейчас в $city: ${weatherCurrent.value} градусов"
+                                    text = "Сейчас в $city: ${weatherCurrent.value} градусов\n" +
+                                            "Пинг: ${ping.value}"
                                 )
                             }
                         }
@@ -109,7 +104,8 @@ fun setAppIcon(context: Context, useAlternativeIcon: Boolean) {
     val packageManager = context.packageManager
 
     val initComponent = ComponentName(context, "com.l3on1kl.change.MainActivity")
-    val alternativeComponent = ComponentName(context, "com.l3on1kl.change.alias.MainActivityAlternative")
+    val alternativeComponent =
+        ComponentName(context, "com.l3on1kl.change.alias.MainActivityAlternative")
 
     if (useAlternativeIcon) {
         packageManager.setComponentEnabledSetting(

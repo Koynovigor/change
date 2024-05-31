@@ -21,3 +21,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "change"
 include(":app")
+include(":network")
+include(":ping")

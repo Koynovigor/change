@@ -51,8 +51,8 @@ android {
 
 dependencies {
 
-    implementation(libs.insert.koin.koin.android)
-    implementation(libs.volley)
+    implementation(project(":network"))
+    implementation(project(":ping"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
