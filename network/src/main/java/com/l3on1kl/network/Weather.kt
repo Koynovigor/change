@@ -24,7 +24,7 @@ private fun getData(city: String, weatherCurrent: MutableState<String>, context:
     val sRequest = StringRequest(Request.Method.GET, URL,
         { response ->
             weatherCurrent.value = getWeather(response)
-            Log.d("responseWeather", "Response: $weatherCurrent.value")
+            Log.d("responseWeather", "Response: ${weatherCurrent.value}")
         },
         { error ->
             Log.d("responseWeather", "VolleyError: $error")

@@ -28,12 +28,9 @@ import java.util.Calendar
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-
         setContent {
             ChangeTheme {
                 // A surface container using the 'background' color from the theme
-
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
@@ -42,12 +39,12 @@ class MainActivity : ComponentActivity() {
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.SpaceAround,
                     ) {
+                        var city by remember {
+                            mutableStateOf("")
+                        }
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally,
                         ) {
-                            var city by remember {
-                                mutableStateOf("")
-                            }
                             val weatherCurrent = remember {
                                 mutableStateOf("")
                             }
@@ -81,13 +78,7 @@ class MainActivity : ComponentActivity() {
                                 )
                             }
                         }
-                        Button(
-                            onClick = {
-                                finish()
-                            },
-                        ) {
-                            Text(text = "Выход")
-                        }
+                        MyScreen(city = city)
                     }
                 }
             }
